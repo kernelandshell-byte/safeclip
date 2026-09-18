@@ -1,5 +1,7 @@
 # SafeClip
 
+![SafeClip popup showing the Recent tab](store-assets/popup-recent.png)
+
 Encrypted clipboard history for Chrome. Everything stays on your device.
 
 Copy something on a web page and SafeClip remembers it. Star the things worth
