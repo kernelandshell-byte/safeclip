@@ -30,6 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   max-height: 520px;
+  position: relative;
 }
 
 .app__header {
@@ -337,22 +338,6 @@ body {
 
 /* ---------- Folder groups + star action ---------- */
 
-.folder-header {
-  font-size: 10.5px;
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  color: var(--text-muted);
-  margin: 12px 2px 5px;
-}
-
-.folder-header:first-child {
-  margin-top: 0;
-}
-
-.list li .meta {
-  justify-content: space-between;
-}
-
 .list li .meta .actions {
   display: flex;
   align-items: center;
@@ -388,10 +373,6 @@ body {
 }
 
 /* ---------- Folder accordion (Saved tab) ---------- */
-
-.app {
-  position: relative;
-}
 
 .folder-row {
   display: flex;
@@ -480,10 +461,14 @@ body {
 }
 
 .overlay__panel h2 {
-  margin: 0 0 10px;
+  margin: 14px 0 10px;
   font-size: 13px;
   font-weight: 600;
   color: var(--text);
+}
+
+.overlay__panel h2:first-child {
+  margin-top: 0;
 }
 
 .overlay__panel input {
@@ -606,12 +591,4 @@ body {
   font-size: 11px;
   margin-top: -2px;
   margin-bottom: 12px;
-}
-
-.overlay__panel h2 {
-  margin-top: 14px;
-}
-
-.overlay__panel h2:first-child {
-  margin-top: 0;
 }

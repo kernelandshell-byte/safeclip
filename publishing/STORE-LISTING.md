@@ -86,7 +86,7 @@ OPEN SOURCE
 
 The full source is on GitHub. You do not have to take a privacy claim on faith when you can read the code and confirm there is no networking in it at all.
 
-[GITHUB LINK GOES HERE]
+https://github.com/kernelandshell-byte/safeclip
 ```
 
 ---
