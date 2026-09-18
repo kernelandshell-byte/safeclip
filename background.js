@@ -560,10 +560,6 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
       })();
       return true;
 
-    case "CLEAR_ALL":
-      chrome.storage.local.set({ history: [] }).then(() => sendResponse({ ok: true }));
-      return true;
-
     case "EXPORT_BACKUP":
       exportBackup().then((backup) => sendResponse({ ok: true, backup }));
       return true;

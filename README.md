@@ -139,7 +139,7 @@ needs, and no network access of any kind.
 Do not take my word for it:
 
 ```bash
-grep -rn "fetch(\|XMLHttpRequest\|http://\|https://" *.js
+grep -rn "fetch(\|XMLHttpRequest\|new WebSocket\|sendBeacon" *.js
 ```
 
 That returns nothing. There is no code in this extension that can send data

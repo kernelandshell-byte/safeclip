@@ -1,6 +1,6 @@
 # SafeClip Privacy Policy
 
-Last updated: 2026
+Last updated: September 2026
 
 ## The short version
 

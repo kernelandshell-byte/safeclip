@@ -404,6 +404,7 @@ function buildItemRow(item) {
   delBtn.textContent = "Delete";
   delBtn.addEventListener("click", (e) => {
     e.stopPropagation();
+    if (item.starred && !confirm("Delete this saved item? This can't be undone.")) return;
     send({ type: "DELETE_ITEM", id: item.id }).then(loadHistory);
   });
 
