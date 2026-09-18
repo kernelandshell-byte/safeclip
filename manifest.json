@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "SafeClip: Encrypted Clipboard History",
-  "version": "1.5.0",
+  "version": "1.0.0",
   "description": "Encrypted clipboard history that never leaves your device. Passphrase protected, auto locking, no account and no server.",
   "permissions": [
     "storage",
