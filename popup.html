@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>SafeClip</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="app__header">
+        <h1 class="wordmark">
+          safe<span class="wordmark__accent">clip</span>
+        </h1>
+        <div class="header__actions">
+          <button id="unlockHeaderBtn" class="btn btn--ghost hidden" type="button">Unlock</button>
+          <button id="settingsBtn" class="btn btn--ghost hidden" type="button" aria-label="Settings">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="6" x2="20" y2="6"/><circle cx="9" cy="6" r="2"/>
+              <line x1="4" y1="12" x2="20" y2="12"/><circle cx="15" cy="12" r="2"/>
+              <line x1="4" y1="18" x2="20" y2="18"/><circle cx="9" cy="18" r="2"/>
+            </svg>
+          </button>
+          <button id="lockBtn" class="btn btn--ghost hidden" type="button">Lock</button>
+        </div>
+      </header>
+
+      <!-- First-run setup, a passphrase is now required -->
+      <section id="view-setup" class="view hidden">
+        <p class="lead">Choose a passphrase to protect your history.</p>
+
+        <div class="pw-field">
+          <input id="setupPass1" type="password" placeholder="Choose a passphrase (8+ characters)" autocomplete="off" />
+          <button type="button" class="eye-btn" data-target="setupPass1" aria-label="Show passphrase">
+            <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+          </button>
+        </div>
+        <div class="pw-field">
+          <input id="setupPass2" type="password" placeholder="Confirm passphrase" autocomplete="off" />
+          <button type="button" class="eye-btn" data-target="setupPass2" aria-label="Show passphrase">
+            <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+          </button>
+        </div>
+
+        <label class="checkbox-row">
+          <input type="checkbox" id="setupAllowRecent" />
+          <span>Let me view Recent without entering my passphrase</span>
+        </label>
+        <p class="lead lead--small">
+          Recent stays encrypted either way, this just means it uses a key stored
+          on this device instead of your passphrase, so anyone with access to this
+          computer could read it. Saved always requires your real passphrase,
+          no matter what. You can change this later.
+        </p>
+
+        <p id="setupError" class="error hidden"></p>
+        <button id="setupBtn" class="btn btn--primary" type="button">Set passphrase</button>
+      </section>
+
+      <!-- Unlock -->
+      <section id="view-unlock" class="view hidden">
+        <p class="lead">Enter your passphrase to continue.</p>
+
+        <div class="pw-field">
+          <input id="unlockPass" type="password" placeholder="Passphrase" autocomplete="off" />
+          <button type="button" class="eye-btn" data-target="unlockPass" aria-label="Show passphrase">
+            <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+            <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+          </button>
+        </div>
+
+        <p id="unlockError" class="error hidden"></p>
+        <button id="unlockBtn" class="btn btn--primary" type="button">Unlock</button>
+      </section>
+
+      <!-- Main history view -->
+      <section id="view-main" class="view hidden">
+        <div class="tabs">
+          <button class="tab active" data-tab="recent" type="button">Recent</button>
+          <button class="tab" data-tab="saved" type="button">Saved</button>
+        </div>
+
+        <div class="search">
+          <input
+            id="search"
+            type="text"
+            placeholder="Search your clips…"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
+
+        <ul id="list" class="list"></ul>
+        <p id="empty" class="empty hidden"></p>
+
+        <div class="backup-row">
+          <button id="exportBtn" class="btn btn--ghost" type="button">Export backup</button>
+          <button id="importBtn" class="btn btn--ghost" type="button">Import backup</button>
+          <input id="importFile" type="file" accept="application/json" class="hidden" />
+        </div>
+
+        <div id="autoLockBar" class="autolock-bar hidden">
+          <span id="autoLockCountdown"></span>
+          <button id="extendBtn" class="btn btn--link btn--inline" type="button">Extend</button>
+        </div>
+
+        <footer class="app__footer">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="footerNote">Encrypted on this device. Nothing is ever sent anywhere.</span>
+        </footer>
+      </section>
+
+      <!-- Settings overlay -->
+      <div id="settingsPanel" class="overlay hidden">
+        <div class="overlay__panel">
+          <h2>Auto-lock</h2>
+          <p class="lead">Lock automatically after this much time unlocked and idle.</p>
+          <select id="autoLockSelect">
+            <option value="1">1 minute</option>
+            <option value="5">5 minutes</option>
+            <option value="15">15 minutes</option>
+            <option value="30">30 minutes</option>
+            <option value="60">1 hour</option>
+            <option value="0">Never</option>
+          </select>
+
+          <h2>Recent without unlocking</h2>
+          <label class="checkbox-row">
+            <input type="checkbox" id="allowRecentToggle" />
+            <span>Let me view Recent without entering my passphrase</span>
+          </label>
+          <p class="lead lead--small">Saved always needs your passphrase regardless of this setting.</p>
+
+          <div class="overlay__actions">
+            <button id="settingsCloseBtn" class="btn btn--primary" type="button">Done</button>
+          </div>
+          <button id="changePassphraseBtn" class="btn btn--link" type="button">Change passphrase…</button>
+        </div>
+      </div>
+
+      <!-- Change passphrase overlay -->
+      <div id="rotatePanel" class="overlay hidden">
+        <div class="overlay__panel">
+          <h2>Change passphrase</h2>
+
+          <div class="pw-field">
+            <input id="rotateOld" type="password" placeholder="Current passphrase" autocomplete="off" />
+            <button type="button" class="eye-btn" data-target="rotateOld" aria-label="Show passphrase">
+              <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+            </button>
+          </div>
+          <div class="pw-field">
+            <input id="rotateNew" type="password" placeholder="New passphrase (8+ characters)" autocomplete="off" />
+            <button type="button" class="eye-btn" data-target="rotateNew" aria-label="Show passphrase">
+              <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+            </button>
+          </div>
+          <div class="pw-field">
+            <input id="rotateConfirm" type="password" placeholder="Confirm new passphrase" autocomplete="off" />
+            <button type="button" class="eye-btn" data-target="rotateConfirm" aria-label="Show passphrase">
+              <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+            </button>
+          </div>
+
+          <p id="rotateError" class="error hidden"></p>
+          <div class="overlay__actions">
+            <button id="rotateCancelBtn" class="btn btn--ghost" type="button">Cancel</button>
+            <button id="rotateSaveBtn" class="btn btn--primary" type="button">Update passphrase</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Import confirmation, requires the current passphrase before overwriting the vault -->
+      <div id="importConfirmPanel" class="overlay hidden">
+        <div class="overlay__panel">
+          <h2>Confirm your passphrase</h2>
+          <p class="lead">Importing replaces your current vault. Enter your current passphrase to authorize it.</p>
+          <div class="pw-field">
+            <input id="importConfirmPass" type="password" placeholder="Current passphrase" autocomplete="off" />
+            <button type="button" class="eye-btn" data-target="importConfirmPass" aria-label="Show passphrase">
+              <svg class="icon-eye" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg class="icon-eye-off hidden" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.94 10.94 0 0 1 12 19c-7 0-11-7-11-7a21.6 21.6 0 0 1 5.06-5.94M9.9 4.24A10.94 10.94 0 0 1 12 4c7 0 11 7 11 7a21.6 21.6 0 0 1-3.22 4.36"/><path d="M1 1l22 22"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></svg>
+            </button>
+          </div>
+          <p id="importConfirmError" class="error hidden"></p>
+          <div class="overlay__actions">
+            <button id="importConfirmCancelBtn" class="btn btn--ghost" type="button">Cancel</button>
+            <button id="importConfirmBtn" class="btn btn--primary" type="button">Import</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Folder picker overlay, shown when starring an item -->
+      <div id="folderPicker" class="overlay hidden">
+        <div class="overlay__panel">
+          <h2>Save to folder</h2>
+          <div id="folderChips" class="folder-chips"></div>
+          <input
+            id="newFolderInput"
+            type="text"
+            placeholder="Or type a new folder name"
+            autocomplete="off"
+            spellcheck="false"
+          />
+          <div class="overlay__actions">
+            <button id="folderCancelBtn" class="btn btn--ghost" type="button">Cancel</button>
+            <button id="folderSaveBtn" class="btn btn--primary" type="button">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="popup.js"></script>
+  </body>
+</html>
