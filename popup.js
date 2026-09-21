@@ -134,7 +134,7 @@ async function init() {
   if (status.state === "ready" && status.lockAt) {
     startCountdown(status.lockAt);
   }
-  loadHistory();
+  await loadHistory();
   if (status.state === "ready") {
     resolvePendingAction();
   }
