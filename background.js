@@ -380,7 +380,13 @@ async function addClip(text) {
   if (!writeKey) return; // locked, and Recent isn't allowed without unlocking
 
   const { history = [] } = await chrome.storage.local.get("history");
-  const decorated = await decorateHistory(history, [passKey, recentKey]);
+  const decorated = [];
+  const undecryptable = [];
+  for (const entry of history) {
+    const envelope = await decryptWithAnyKey(entry, [passKey, recentKey]);
+    if (envelope) decorated.push({ entry, envelope });
+    else undecryptable.push(entry); // e.g. Saved items while locked; leave untouched
+  }
 
   if (decorated.length > 0) {
     const mostRecent = decorated.reduce((a, b) => (a.envelope.ts > b.envelope.ts ? a : b));
@@ -392,7 +398,7 @@ async function addClip(text) {
   const enc = await encryptWithKey(writeKey, JSON.stringify(envelope), id);
   decorated.push({ entry: { id, iv: enc.iv, data: enc.data }, envelope });
 
-  await chrome.storage.local.set({ history: pruneDecorated(decorated) });
+  await chrome.storage.local.set({ history: [...undecryptable, ...pruneDecorated(decorated)] });
 }
 
 async function decryptAll() {
