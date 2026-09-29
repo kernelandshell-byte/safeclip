@@ -14,6 +14,7 @@ const els = {
   unlockPass: document.getElementById("unlockPass"),
   unlockError: document.getElementById("unlockError"),
   unlockBtn: document.getElementById("unlockBtn"),
+  unlockCancelBtn: document.getElementById("unlockCancelBtn"),
 
   viewMain: document.getElementById("view-main"),
   search: document.getElementById("search"),
@@ -88,6 +89,7 @@ function updateHeaderControls() {
 function requireUnlock(action) {
   pendingAction = action;
   showView("unlock");
+  els.unlockCancelBtn.classList.remove("hidden");
   els.unlockError.classList.add("hidden");
   els.unlockPass.value = "";
   els.unlockPass.focus();
@@ -117,8 +119,15 @@ async function init() {
     return;
   }
 
+  // Saved can't be shown once locked, so don't leave its tab selected.
+  if (status.state !== "ready" && activeTab === "saved") {
+    activeTab = "recent";
+    document.querySelectorAll(".tab").forEach((b) => b.classList.toggle("active", b.dataset.tab === "recent"));
+  }
+
   if (status.state === "needs-unlock") {
     showView("unlock");
+    els.unlockCancelBtn.classList.add("hidden");
     if (status.lockedUntil) {
       showLockoutMessage(status.lockedUntil);
     } else {
@@ -210,6 +219,11 @@ async function attemptUnlock() {
 }
 
 els.unlockHeaderBtn.addEventListener("click", () => requireUnlock(null));
+
+els.unlockCancelBtn.addEventListener("click", () => {
+  pendingAction = null;
+  init();
+});
 
 // ---- Lock ----
 

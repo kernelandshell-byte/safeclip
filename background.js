@@ -447,6 +447,9 @@ async function setItemMeta(id, starred, folder) {
 
   envelope.starred = starred;
   if (starred) envelope.folder = folder || envelope.folder || "General";
+  // An unstarred item rejoins Recent, where the oldest entries are pruned.
+  // Keeping its original timestamp would delete it right away once Recent is full.
+  else envelope.ts = Date.now();
 
   const targetKey = starred ? passKey : recentKey || passKey;
   const enc = await encryptWithKey(targetKey, JSON.stringify(envelope), id);
@@ -475,6 +478,15 @@ async function exportBackup() {
 
 async function importBackup(backup, currentPassphrase) {
   if (!backup || backup.format !== "safeclip-backup" || !backup.config) {
+    return { ok: false, reason: "invalid" };
+  }
+  const c = backup.config;
+  if (
+    typeof c.saltB64 !== "string" ||
+    typeof c.verifyIv !== "string" ||
+    typeof c.verifyData !== "string" ||
+    (backup.history !== undefined && !Array.isArray(backup.history))
+  ) {
     return { ok: false, reason: "invalid" };
   }
 
