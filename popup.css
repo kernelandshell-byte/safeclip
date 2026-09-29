@@ -41,6 +41,9 @@ body {
 }
 
 .wordmark {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
   font-size: 16px;
   font-weight: 600;
@@ -50,6 +53,11 @@ body {
 
 .wordmark__accent {
   color: var(--accent);
+}
+
+.wordmark__logo {
+  display: block;
+  border-radius: 5px;
 }
 
 .btn {

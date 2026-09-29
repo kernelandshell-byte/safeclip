@@ -113,6 +113,7 @@ async function init() {
   const status = await send({ type: "GET_STATUS" });
   currentState = status.state;
   allowRecentWithoutPassphrase = !!status.allowRecentWithoutPassphrase;
+  updateHeaderControls();
 
   if (status.state === "needs-setup") {
     showView("setup");
