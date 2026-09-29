@@ -9,6 +9,7 @@ const els = {
   setupAllowRecent: document.getElementById("setupAllowRecent"),
   setupError: document.getElementById("setupError"),
   setupBtn: document.getElementById("setupBtn"),
+  setupRestoreBtn: document.getElementById("setupRestoreBtn"),
 
   viewUnlock: document.getElementById("view-unlock"),
   unlockPass: document.getElementById("unlockPass"),
@@ -623,6 +624,7 @@ els.exportBtn.addEventListener("click", async () => {
 });
 
 els.importBtn.addEventListener("click", () => els.importFile.click());
+els.setupRestoreBtn.addEventListener("click", () => els.importFile.click());
 
 els.importFile.addEventListener("change", async () => {
   const file = els.importFile.files[0];
@@ -643,9 +645,10 @@ els.importFile.addEventListener("change", async () => {
     return;
   }
 
-  const proceed = confirm(
-    "This replaces your current vault with the one in this backup file. This can't be undone. Continue?"
-  );
+  // A fresh install has no vault to replace, so there is nothing to confirm.
+  const proceed =
+    currentState === "needs-setup" ||
+    confirm("This replaces your current vault with the one in this backup file. This can't be undone. Continue?");
   els.importFile.value = "";
   if (!proceed) return;
 
